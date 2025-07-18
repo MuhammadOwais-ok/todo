@@ -5,6 +5,9 @@ const login = (reuqest, responce) => {
 
 
 const signUp = (requst, responce) => {
+    return responce.json({
+        messsage: "signUp Successfully"
+    })
 
 }
 
