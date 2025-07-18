@@ -1,6 +1,6 @@
 
 const login = (reuqest, responce) => {
-    
+    return responce.json({ message: "login successfully" })
 }
 
 
