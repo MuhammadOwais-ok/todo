@@ -11,6 +11,7 @@ const signUp = async (request, response) => {
     try {
        
         
+        const {firstName,lastName,email,password} = request.body
         const isalreadyInOurDatabase = await User.findOne({
             email
         })
