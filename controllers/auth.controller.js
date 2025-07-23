@@ -9,9 +9,7 @@ require("dotenv").config();
 
 const signUp = async (request, response) => {
     try {
-       
-        
-        const {firstName,lastName,email,password} = request.body
+        const { firstName, lastName, email, password } = request.body
         const isalreadyInOurDatabase = await User.findOne({
             email
         })
@@ -37,20 +35,20 @@ const signUp = async (request, response) => {
             process.env.JWT_SECRET_KEY,
             { expiresIn: "1d" }
         );
-        
-        
+
+
         const userToReturn = { ...createdUser._doc };
         delete userToReturn.password;
 
-            
+
         return response.status(201).json({
             message: "Account has been Created",
             createdUser,
             token
         })
-       
-        
-        
+
+
+
 
     } catch (error) {
         console.error("signUp Error", error.message);
@@ -63,10 +61,10 @@ const signUp = async (request, response) => {
 
 const login = async (request, response) => {
 
-    
+
     try {
-        
-          const {email,password}= request.body              
+
+        const { email, password } = request.body
         const user = await User.findOne({ email })
 
 

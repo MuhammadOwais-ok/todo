@@ -1,46 +1,31 @@
-const { Schema, default: mongoose } = require("mongoose");
+const mongoose = require('mongoose');
 
-
-
-const userSchema = new Schema({
-
-    firstName: {
-        type: String,
-        required: true,
-        trim: true,
-    },
-
-    lastName: {
+const todoSchema = new mongoose.Schema({
+    title: {
         type: String,
         required: true,
         trim: true
     },
-
-    email: {
+    description: {
         type: String,
-        required: true,
-        trim: true,
-        unique: true,
-        lowercase: true
+        default: '',
+        trim: true
     },
-
-    password: {
-        type: String,
+    completed: {
+        type: Boolean,
+        default: false
+    },
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User', // assumes you have a User model
         required: true
     },
-
-    createAt: {
+    createdAt: {
         type: Date,
         default: Date.now
     }
-    
+});
 
+const Todo = mongoose.model('Todo', todoSchema);
 
-
-})
-
-
-const User = mongoose.model("User", userSchema)
-
-
-module.exports = User;// models/User.js
+module.exports = Todo;
