@@ -14,10 +14,8 @@
         }
         const { firstName, lastName, email, password } = data
 
-        if (!firstName ||
-            !lastName ||
-            !email ||
-            !password
+        if (!firstName 
+            
         ) {
             return response.status(400).json({
                 message: "firstName are required"

@@ -1,17 +1,14 @@
 
 
 const createUser = (request,responce)=>{
-    try {
-        
-    } catch (error) { 
-        console.log(error.message);
+    
         
         
         
         
     }
 
-}
+
 
 const updateUser = (request,responce)=>{
 

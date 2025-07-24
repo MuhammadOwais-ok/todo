@@ -11,14 +11,10 @@ const todoSchema = new mongoose.Schema({
         default: '',
         trim: true
     },
-    completed: {
-        type: Boolean,
-        default: false
-    },
-    userId: {
+    
+    user: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: 'User', // assumes you have a User model
-        required: true
+        ref: 'User',
     },
     createdAt: {
         type: Date,
