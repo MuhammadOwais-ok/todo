@@ -10,6 +10,7 @@ require("dotenv").config();
 const signUp = async (request, response) => {
     try {
         const { firstName, lastName, email, password } = request.body
+
         const isalreadyInOurDatabase = await User.findOne({
             email
         })
@@ -61,7 +62,7 @@ const signUp = async (request, response) => {
 
 const login = async (request, response) => {
 
-
+            
     try {
 
         const { email, password } = request.body
