@@ -18,7 +18,6 @@ const createTodo = async (request, response) => {
 
         }
 
-
         if (!user) {
             return response.status(404).json({
                 message: "User not found"
@@ -46,7 +45,6 @@ const createTodo = async (request, response) => {
         })
 
     }
-
 
 }
 
@@ -82,18 +80,12 @@ const updateTodo = async (request, response) => {
         })
 
 
-
-
     } catch (error) {
         return response.status(500).json({
             message: " Internal Server error"
         })
 
     }
-
-
-
-
 
 }
 
@@ -126,20 +118,12 @@ const deleteTodo = async (request, response) => {
         })
 
 
-
-
     } catch (error) {
         return response.status(500).json({
             error: error.message || "Internal Server Error"
         })
 
     }
-
-
-
-
-
-
 
 }
 
@@ -147,21 +131,26 @@ const getallTodo = async (request, response) => {
 
 
     try {
-        const userId = request.user._id
-
-        if (!userId) {
-            return response.status(401).json({
-                message: "Unauthorized: user not found in token"
-            });
-        }
+        const userId = request.user.id
         
 
-        const todos = await Todo.find({ user: userId });
+
+        const user = await User.findOne({ _id: userId });
+
+        if (!user) {
+            return response.status(400).json({
+                message: "no user found"
+            })
+
+        }
+
+        const todo = await Todo.find({ user: { _id: user._id } })
+
 
 
         return response.status(201).json({
             message: " All todos ",
-            todos
+            todo
         })
 
 
@@ -179,6 +168,8 @@ const getallTodo = async (request, response) => {
 
 
 }
+
+
 
 module.exports = {
     createTodo,

@@ -37,6 +37,9 @@ const signUp = async (request, response) => {
             { expiresIn: "1d" }
         );
 
+        
+
+
 
         const userToReturn = { ...createdUser._doc };
         delete userToReturn.password;
