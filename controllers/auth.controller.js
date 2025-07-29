@@ -3,6 +3,10 @@ const bcrypt = require("bcrypt")
 const User = require("../models/User")
 const JWT = require('jsonwebtoken');
 const { transporter } = require("../utils/nodemailer");
+const nodemailer = require("nodemailer");
+const otp = require("otp-generator");
+const OTP = require("../models/otps");
+
 
 require("dotenv").config();
 
@@ -133,7 +137,149 @@ const login = async (request, response) => {
     }
 }
 
+
+
+const forgotPassword = async (request, response) => {
+    try {
+        const { email } = request.body
+
+        const user = await User.findOne({
+            email
+        })
+        if (!user) {
+            return response.status(404).json({
+                messgae: "User Not Found"
+            })
+
+        }
+
+        const genratedOtp = otp.generate(4, {
+
+            digits: true,
+            lowerCaseAlphabets: false,
+            upperCaseAlphabets: false,
+            specialChars: false,
+        })
+
+        const now = new Date()
+        const newExpiriDate = new Date(now.getTime() + 5 * 60 * 1000)
+
+        const newOtp = new OTP({
+            email: user.email,
+            otpCode: genratedOtp,
+            expiresAt: newExpiriDate
+
+        })
+
+        await newOtp.save()
+
+
+        await transporter.sendMail({
+            to: user.email,
+            subject: "otp ",
+            text: `your otp code is ${genratedOtp}`
+        })
+
+
+
+        return response.json({
+            message: "otp has been sent"
+        })
+
+
+
+
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        })
+    }
+
+}
+
+const verifyOtp = async (request, response) => {
+    try {
+        const { email, code } = request.body
+        const now = new Date()
+
+        const otp = await OTP.findOne({
+            email,
+            otpCode: code
+
+        })
+        if (!otp) {
+            return response.status(404).json({
+                message: "invalid OTP"
+            })
+
+        }
+
+
+
+        if (now > otp.expiresAt) {
+            return response.status(401).json({
+                message: "OTP has expires"
+            })
+
+        }
+
+        return response.json({
+            message: "You can change your password"
+        })
+
+
+
+
+
+
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        })
+
+    }
+}
+
+const newPassword = async (request, response) => {
+    try {
+        const { email, newPassword } = request.body
+        const user = await User.findOne({
+            email,
+            
+        })
+        if (!user) {
+            return response.status(404).json({
+                message:"User Not Found"
+            })
+            
+        }
+
+        const hashpassword = await bcrypt.hash(newPassword,10)
+
+        user.password = hashpassword;
+
+        user.save()
+
+        return response.status(201).json({
+            message:"Password has been Successfully changed"
+        })
+
+    } catch (error) {
+        return response.status(500).json({
+            message: "Internal Server Error",
+            error: error.message
+        })
+
+    }
+}
+
+
 module.exports = {
     login,
-    signUp
+    signUp,
+    forgotPassword,
+    verifyOtp,
+    newPassword
 }
