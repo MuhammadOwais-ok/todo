@@ -32,8 +32,15 @@ const userSchema = new Schema({
     createAt: {
         type: Date,
         default: Date.now
+    },
+    role: {
+        type: String,
+        Enumerator: ["user", "admin"],
+
     }
-    
+
+
+
 
 
 

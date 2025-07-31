@@ -37,7 +37,7 @@ const signUp = async (request, response) => {
         await createdUser.save()
 
         const token = JWT.sign(
-            { id: createdUser._id, email: createdUser.email },
+            { id: createdUser._id, email: createdUser.email, role: createdUser.role },
             process.env.JWT_SECRET_KEY,
             { expiresIn: "1d" }
         );
@@ -100,9 +100,11 @@ const login = async (request, response) => {
         const user = await User.findOne({ email })
 
 
+
+
         if (!user) {
-            return response.status(401).json({
-                message: "Invalid Credeintial"
+            return response.status(404).json({
+                message: "User Not Found"
             })
         }
 
@@ -114,7 +116,7 @@ const login = async (request, response) => {
             })
         }
         const token = JWT.sign(
-            { id: user._id, email: user.email },
+            { id: user._id, email: user.email, role: user.role },
             process.env.JWT_SECRET_KEY,
             {
                 expiresIn: "1d"
@@ -247,23 +249,23 @@ const newPassword = async (request, response) => {
         const { email, newPassword } = request.body
         const user = await User.findOne({
             email,
-            
+
         })
         if (!user) {
             return response.status(404).json({
-                message:"User Not Found"
+                message: "User Not Found"
             })
-            
+
         }
 
-        const hashpassword = await bcrypt.hash(newPassword,10)
+        const hashpassword = await bcrypt.hash(newPassword, 10)
 
         user.password = hashpassword;
 
         user.save()
 
         return response.status(201).json({
-            message:"Password has been Successfully changed"
+            message: "Password has been Successfully changed"
         })
 
     } catch (error) {
@@ -274,6 +276,8 @@ const newPassword = async (request, response) => {
 
     }
 }
+
+
 
 
 module.exports = {
