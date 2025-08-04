@@ -155,7 +155,7 @@ const forgotPassword = async (request, response) => {
 
         }
 
-        const genratedOtp = otp.generate(4, {
+        const genratedOtp = otp.generate(5, {
 
             digits: true,
             lowerCaseAlphabets: false,
@@ -179,7 +179,9 @@ const forgotPassword = async (request, response) => {
         await transporter.sendMail({
             to: user.email,
             subject: "otp ",
-            text: `your otp code is ${genratedOtp}`
+            text: `your otp code is ${genratedOtp}`,
+           
+            
         })
 
 

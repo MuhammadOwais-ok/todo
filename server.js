@@ -5,6 +5,7 @@ const PORT = process.env.PORT || 2498
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 const connectDB = require("./db/connect")
+require('./cron-jobs')
 
 
 app.use("/auth", require("./routes/auth.routes"))
